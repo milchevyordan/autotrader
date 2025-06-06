@@ -1,0 +1,16 @@
+export enum ExteriorColour {
+    Beige = 1,
+    Blue = 2,
+    Brown = 3,
+    Bronze = 4,
+    Yellow = 5,
+    Grey = 6,
+    Green = 7,
+    Red = 8,
+    Black = 9,
+    Silver = 10,
+    Purple = 11,
+    White = 12,
+    Orange = 13,
+    Gold = 14,
+}

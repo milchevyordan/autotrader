@@ -1,0 +1,16 @@
+export enum InteriorMaterial {
+    Fabric = 1,
+    Velour = 2,
+    Microfiber = 3,
+    Alcantara = 4,
+    Synthetic_leather = 5,
+    Leather = 6,
+    Fabric_and_alcantara = 7,
+    Fabric_and_microfiber = 8,
+    Synthetic_leather_and_fabric = 9,
+    Leather_and_fabric = 10,
+    Leather_and_alcantara = 11,
+    Full_leather = 12,
+    Extended_leather = 13,
+    New = 14,
+}

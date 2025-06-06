@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .element-center {
+        @apply flex items-center justify-center;
+    }
+
+    .element-center-col {
+        @apply flex flex-col items-center justify-center;
+    }
+}
+
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.4s linear;
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.4s linear;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
+.bounce-enter-active {
+    animation: bounce-in 0.4s;
+}
+
+.bounce-leave-active {
+    animation: bounce-in 0.4s reverse;
+}
+
+@keyframes bounce-in {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.25);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.slide-fade-enter-active {
+    transition: all 0.4s ease-out;
+}
+
+.slide-fade-leave-active {
+    transition: all 0.4s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+    transform: translateX(20px);
+    opacity: 0;
+}
+
+#nprogress .spinner {
+    width: 60px !important;
+    height: 60px !important;
+
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+
+    z-index: 1031 !important;
+}
+
+#nprogress .spinner-icon {
+    width: 60px !important;
+    height: 60px !important;
+    border-top-width: 6px !important;
+    border-left-width: 6px !important;
+    animation: nprogress-spinner 0.4s linear infinite;
+}
+
+#nprogress::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1030;
+    pointer-events: all;
+}

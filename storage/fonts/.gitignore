@@ -1,0 +1,12 @@
+# Ignore everything
+*
+
+# Allow .gitignore itself
+!.gitignore
+
+# Allow specific files
+!bunny.css
+!Montserrat-Bold.ttf
+!SourceSans3-Bold.ttf
+!SourceSans3-Medium.ttf
+!SourceSans3-Regular.ttf

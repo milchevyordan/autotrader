@@ -1,0 +1,97 @@
+#!/bin/sh
+
+# THIS FILE IS COPIED TO THE /.git/hooks directory when running "post-install-cmd", "post-update-cmd" and "post-root-package-install"
+
+# Color codes
+RED=$(tput setaf 1)   # Red
+GREEN=$(tput setaf 2) # Green
+YELLOW=$(tput setaf 3) # Yellow
+RESET=$(tput sgr0)    # Reset
+
+PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php -v --using-cache=yes
+git add .
+
+
+# Check for console.log() or dd() statements in committed files
+script_filename="pre-commit"
+problematic_files=$(git diff --cached --name-only | xargs grep -l -E '\b(console\.log|dd|dump)\(')
+
+# Exclude the script file from the list
+problematic_files=$(echo "$problematic_files" | grep -v "$script_filename")
+
+if [ -n "$problematic_files" ]; then
+    echo "${RED}Commit contains console.log() or dd() statements:${RESET}"
+    for file in $problematic_files; do
+       LINE=$( grep -n -E '\b(console\.log|dd)\(' "$file" | perl -pe "s/\b(console\.log|dd)\(/$YELLOW\$1\($RESET/")
+        echo "${YELLOW}${file}:${RESET}${LINE}"
+    done
+    echo "${RED}Please remove them.${RESET}"
+    exit 1
+fi
+
+# Check if the --escape-build option is provided
+if [[ "$1" == "--escape-build" ]]; then
+  echo "Skipping build due to --escape-build option."
+else
+  if [ -z "$(git diff --cached --name-only)" ]; then
+    echo "No changes to commit. Skipping build."
+  else
+    npm run build
+
+    # Check if an error occurred during build
+    if [ $? -ne 0 ]; then
+      echo "${RED}Error: npm run build failed. Commit aborted.${RESET}"
+      exit 1
+    fi
+
+    # Add the built files to the staging area
+    git add .
+  fi
+fi
+
+# Commit the files with the provided commit message
+commit_message=$(git config --get commit.template)
+git commit -m "$commit_message" --no-verify
+
+# Rest of your existing pre-commit script
+
+if git rev-parse --verify HEAD >/dev/null 2>&1
+then
+	against=HEAD
+else
+	# Initial commit: diff against an empty tree object
+	against=$(git hash-object -t tree /dev/null)
+fi
+
+# If you want to allow non-ASCII filenames set this variable to true.
+allownonascii=$(git config --type=bool hooks.allownonascii)
+
+# Redirect output to stderr.
+exec 1>&2
+
+# Cross platform projects tend to avoid non-ASCII filenames; prevent
+# them from being added to the repository. We exploit the fact that the
+# printable range starts at the space character and ends with tilde.
+if [ "$allownonascii" != "true" ] &&
+	# Note that the use of brackets around a tr range is ok here, (it's
+	# even required, for portability to Solaris 10's /usr/bin/tr), since
+	# the square bracket bytes happen to fall in the designated range.
+	test $(git diff --cached --name-only --diff-filter=A -z $against |
+	  LC_ALL=C tr -d '[ -~]\0' | wc -c) != 0
+then
+	cat <<\EOF
+Error: Attempt to add a non-ASCII file name.
+
+This can cause problems if you want to work with people on other platforms.
+
+To be portable it is advisable to rename the file.
+
+If you know what you are doing you can disable this check using:
+
+  git config hooks.allownonascii true
+EOF
+	exit 1
+fi
+
+# If there are whitespace errors, print the offending file names and fail.
+exec git diff-index --check --cached $against --

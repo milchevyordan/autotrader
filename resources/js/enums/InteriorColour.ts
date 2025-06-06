@@ -1,0 +1,15 @@
+export enum InteriorColour {
+    Beige = 1,
+    Blue = 2,
+    Brown = 3,
+    Yellow = 4,
+    Grey = 5,
+    Green = 6,
+    Red = 7,
+    Black = 8,
+    Purple = 9,
+    White = 10,
+    Orange = 11,
+    Gold = 12,
+    Other = 13,
+}
