@@ -64,7 +64,7 @@ class NotificationController extends Controller
         try {
             Notification::find($notificationId)->update(['read_at' => now()]);
 
-            Cache::tags(CacheTag::User_notifications->value)->forget(auth()->id());
+            Cache::forget(auth()->id().CacheTag::User_notifications->value);
 
             return redirect()->back()->with('success', __('Notification marked as read.'));
         } catch (Throwable $th) {
@@ -86,7 +86,7 @@ class NotificationController extends Controller
                 ->unreadNotifications
                 ->markAsRead();
 
-            Cache::tags(CacheTag::User_notifications->value)->forget(auth()->id());
+            Cache::forget(auth()->id().CacheTag::User_notifications->value);
 
             return redirect()->back()->with('success', __('All notification marked read.'));
         } catch (Throwable $th) {

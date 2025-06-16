@@ -194,8 +194,8 @@ class CompanyService
             ->update($validatedRequest);
 
         $changeLoggerService->logChanges($company);
-        Cache::tags(CacheTag::Currency->value)->forget($company->id);
-        Cache::tags(CacheTag::Vat_percentage->value)->forget($company->id);
+        Cache::forget($company->id.CacheTag::Currency->value);
+        Cache::forget($company->id.CacheTag::Vat_percentage->value);
 
         return $this;
     }

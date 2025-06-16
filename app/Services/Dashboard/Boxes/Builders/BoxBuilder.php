@@ -197,7 +197,7 @@ abstract class BoxBuilder
         $cacheKey = $this->getCacheKey();
         $cacheTags = $this->getCacheTags();
 
-        $cachedData = Cache::tags($cacheTags)->get($cacheKey);
+        $cachedData = Cache::get($cacheKey.$cacheTags);
 
         if ($cachedData) {
             [$this->count, $this->redFlagsCount] = [$cachedData['count'], $cachedData['redFlagsCount']];
@@ -229,8 +229,8 @@ abstract class BoxBuilder
      */
     public function cacheValues(): self
     {
-        Cache::tags($this->getCacheTags())->put(
-            $this->getCacheKey(),
+        Cache::put(
+            $this->getCacheKey().$this->getCacheTags(),
             [
                 'count'         => $this->count,
                 'redFlagsCount' => $this->redFlagsCount,
@@ -252,8 +252,8 @@ abstract class BoxBuilder
     /**
      * Get the cache tags for this instance.
      */
-    private function getCacheTags(): array
+    private function getCacheTags(): string
     {
-        return [CacheTag::Dashboard_boxes->name.'_'.Auth::id()];
+        return CacheTag::Dashboard_boxes->name.'_'.Auth::id();
     }
 }

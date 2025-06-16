@@ -68,7 +68,7 @@ class OwnershipService extends Service
 
         $ownership->changeStatus(OwnershipStatus::Accepted);
 
-        Cache::tags(CacheTag::Pending_ownerships->value)->forget(auth()->id());
+        Cache::forget(auth()->id().CacheTag::Pending_ownerships->value);
     }
 
     /**
@@ -86,7 +86,7 @@ class OwnershipService extends Service
 
         $ownership->changeStatus(OwnershipStatus::Rejected);
 
-        Cache::tags(CacheTag::Pending_ownerships->value)->forget(auth()->id());
+        Cache::forget(auth()->id().CacheTag::Pending_ownerships->value);
     }
 
     /**

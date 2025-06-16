@@ -66,7 +66,7 @@ class SendRedFlagNotification
     protected function clearUserNotificationCache(): void
     {
         foreach ($this->users as $user) {
-            Cache::tags(CacheTag::User_notifications->value)->forget($user->id);
+            Cache::forget($user->id.CacheTag::User_notifications->value);
         }
     }
 }

@@ -121,7 +121,7 @@ trait HasOwner
             $resourceNameWithId
         ));
 
-        Cache::tags(CacheTag::Pending_ownerships->value)->forget($notifiable->id);
+        Cache::forget($notifiable->id.CacheTag::Pending_ownerships->value);
     }
 
     /**

@@ -29,7 +29,7 @@ class CacheService extends Service
      */
     public function getUserCompanyCurrency(?User $user): ?int
     {
-        return (int) Cache::tags(CacheTag::Currency->value)->remember($user?->company_id, now()->addHours(), function () use ($user) {
+        return (int) Cache::remember($user?->company_id.CacheTag::Currency->value, now()->addHours(), function () use ($user) {
             return ((int) $user?->company?->default_currency?->value) ?? null;
         });
     }
@@ -43,7 +43,7 @@ class CacheService extends Service
     public static function clearUserNotificationCache(array $userIds): void
     {
         foreach ($userIds as $userId) {
-            Cache::tags(CacheTag::User_notifications->value)->forget($userId);
+            Cache::forget($userId.CacheTag::User_notifications->value);
         }
     }
 }

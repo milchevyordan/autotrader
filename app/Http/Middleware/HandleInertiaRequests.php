@@ -52,29 +52,29 @@ class HandleInertiaRequests extends Middleware
         $user = $request->user() ?? null;
         $userId = $user->id ?? null;
 
-        $roles = Cache::tags(CacheTag::User_roles->value)->remember($userId, now()->addHours(), function () use ($user) {
+        $roles = Cache::remember($userId.CacheTag::User_roles->value, now()->addHours(), function () use ($user) {
             return $user?->roles->pluck('name')->unique()->toArray() ?? [];
         });
 
-        $permissions = Cache::tags(CacheTag::User_permissions->value)->remember($userId, now()->addHours(), function () use ($user) {
+        $permissions = Cache::remember($userId.CacheTag::User_permissions->value, now()->addHours(), function () use ($user) {
             $user?->loadMissing('roles.permissions');
 
             return $user?->roles->flatMap->permissions->pluck('name')->unique()->toArray() ?? [];
         });
 
-        $notificationsCount = Cache::tags(CacheTag::User_notifications->value)->remember($userId, now()->addHours(), function () use ($user) {
+        $notificationsCount = Cache::remember($userId.CacheTag::User_notifications->value, now()->addHours(), function () use ($user) {
             return $user?->unreadNotifications->count() ?? 0;
         });
 
-        $pendingOwnershipsCount = Cache::tags(CacheTag::Pending_ownerships->value)->remember($userId, now()->addHours(), function () use ($user) {
+        $pendingOwnershipsCount = Cache::remember($userId.CacheTag::Pending_ownerships->value, now()->addHours(), function () use ($user) {
             return $user?->pendingOwnerships->count() ?? 0;
         });
 
-        $userCompanyLogo = Cache::tags(CacheTag::Company_logo->value)->remember($userId, now()->addHours(), function () use ($user) {
+        $userCompanyLogo = Cache::remember($userId.CacheTag::Company_logo->value, now()->addHours(), function () use ($user) {
             return CompanyService::getCompanyLogoForUser($user);
         });
 
-        $userCompanyVatPercentage = (int) Cache::tags(CacheTag::Vat_percentage->value)->remember($user?->company_id, now()->addHours(), function () use ($user) {
+        $userCompanyVatPercentage = (int) Cache::remember($user?->company_id.CacheTag::Vat_percentage->value, now()->addHours(), function () use ($user) {
             return $user?->company?->vat_percentage ?? null;
         });
 
